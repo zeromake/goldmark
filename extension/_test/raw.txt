@@ -45,3 +45,21 @@ $$</p>
 <li>test $\theta_0fff</li>
 </ul>
 //= = = = = = = = = = = = = = = = = = = = = = = =//
+
+
+5
+//- - - - - - - - -//
+- test $\theta_0$ test2 $\theta_1$
+//- - - - - - - - -//
+<ul>
+<li>test <code class="raw-inline">\theta_0</code> test2 <code class="raw-inline">\theta_1</code></li>
+</ul>
+//= = = = = = = = = = = = = = = = = = = = = = = =//
+
+
+6
+//- - - - - - - - -//
+假设您已经训练了逻辑回归分类器，并且在新示例 $x$ 上输出了预测 $h_θ(x) = 0.2$。这意味着（多选）
+//- - - - - - - - -//
+<p>假设您已经训练了逻辑回归分类器，并且在新示例 <code class="raw-inline">x</code> 上输出了预测 <code class="raw-inline">h_θ(x) = 0.2</code>。这意味着（多选）</p>
+//= = = = = = = = = = = = = = = = = = = = = = = =//

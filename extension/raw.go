@@ -2,7 +2,6 @@ package extension
 
 import (
 	"bytes"
-
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
@@ -18,6 +17,7 @@ type RawOption struct {
 	IsBlock               bool   `json:"is_block"`                 // 是否为块级
 	Tag                   string `json:"tag"`                      // 捕捉后生成的 html 标签
 	ClassName             string `json:"class_name"`               // 生成的标签的 class 值
+	Inner                 string `json:"inner"`                    // 生成的标签的内嵌属性例如 title="11"
 	KeepMark              bool   `json:"keep_mark"`                // 是否保留匹配用标识
 	PrefixMark            string `json:"prefix_mark"`              // 开头匹配
 	SuffixMark            string `json:"suffix_mark"`              // 结尾匹配
@@ -109,9 +109,11 @@ func (r *RawInlineParser) Parse(_ ast.Node, reader text.Reader, _ parser.Context
 	}
 	suffixCount := len(r.Option.SuffixMark)
 	index := bytes.Index(line[prefixCount:], strutil.StringToBytes(r.Option.SuffixMark))
-	if index > suffixCount {
-		index += suffixCount
-		if line[index-suffixCount] != '\\' {
+	if index >= 0 {
+		index += prefixCount
+	}
+	if index >= 0 {
+		if line[index] != '\\' {
 			reader.Advance(index + suffixCount)
 			start := prefixCount
 			end := index
@@ -147,6 +149,10 @@ func (t *RawBlockHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegist
 				_, _ = w.WriteString(t.Option.ClassName)
 				_ = w.WriteByte('"')
 			}
+			if t.Option.Inner != "" {
+				_, _ = w.WriteString(" ")
+				_, _ = w.WriteString(t.Option.Inner)
+			}
 			_, _ = w.WriteString(">\n")
 		} else {
 			_, _ = w.WriteString("</")
@@ -177,6 +183,10 @@ func (r *RawInlineHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegis
 				_, _ = w.WriteString(" class=\"")
 				_, _ = w.WriteString(r.Option.ClassName)
 				_ = w.WriteByte('"')
+			}
+			if r.Option.Inner != "" {
+				_, _ = w.WriteString(" ")
+				_, _ = w.WriteString(r.Option.Inner)
 			}
 			_ = w.WriteByte('>')
 			_, _ = w.Write(n.(*east.RawInline).Content)
